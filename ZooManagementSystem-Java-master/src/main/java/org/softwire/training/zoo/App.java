@@ -1,5 +1,6 @@
 package org.softwire.training.zoo;
 
+import org.softwire.training.zoo.facade.ZooFacade;
 import org.softwire.training.zoo.factories.AnimalFactory;
 import org.softwire.training.zoo.factories.LargeAnimalFactory;
 import org.softwire.training.zoo.factories.SmallAnimalFactory;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class App {
 	Scanner scan = new Scanner(System.in);
@@ -243,25 +245,39 @@ public class App {
             	notifyObserver();
             	break;
             case 7:
-//              Keeper<LargeAnimal> largeAnimalKeeper = new Keeper<>(largeAnimals);
-//              Keeper<SmallAnimal> smallAnimalKeeper = new Keeper<>(smallAnimals);
-//      
-//              List<Keeper<? extends Animal>> keepers = Arrays.asList(largeAnimalKeeper, smallAnimalKeeper);
-//              
-//              
-//      
-//              FeedingScheduler feedingScheduler = FeedingScheduler.getInstance();
-//              GroomingScheduler groomingScheduler = GroomingScheduler.getInstance();
-//      
-//              feedingScheduler.assignFeedingJobs(keepers);
-//              groomingScheduler.assignGroomingJobs(keepers);
+            	List<AbstractAnimal> allAnimals = db.getAnimals();
+
+            	// Memfilter LargeAnimal
+            	List<LargeAnimal> largeAnimals = allAnimals.stream()
+            	    .filter(animal -> animal instanceof LargeAnimal) // Memastikan hanya LargeAnimal
+            	    .map(animal -> (LargeAnimal) animal)             // Konversi ke LargeAnimal
+            	    .collect(Collectors.toList());
+            	
+            	// Memfilter SmallAnimal
+            	List<SmallAnimal> smallAnimals = allAnimals.stream()
+            	    .filter(animal -> animal instanceof SmallAnimal) // Memastikan hanya SmallAnimal
+            	    .map(animal -> (SmallAnimal) animal)             // Konversi ke SmallAnimal
+            	    .collect(Collectors.toList());
+            	
+                Keeper<LargeAnimal> largeAnimalKeeper = new Keeper<>(largeAnimals);
+                Keeper<SmallAnimal> smallAnimalKeeper = new Keeper<>(smallAnimals);
+      
+                List<Keeper<? extends Animal>> keepers = Arrays.asList(largeAnimalKeeper, smallAnimalKeeper);          
+
+                // Gunakan ZooFacade
+                ZooFacade zooFacade = new ZooFacade();
+
+                // Jadwalkan perawatan harian
+                System.out.println("Starting daily care schedule...");
+                zooFacade.scheduleDailyCare(keepers);
+                System.out.println("Daily care schedule completed.");
             	break;
             case 8:
             	System.out.println("Exiting the Zoo Management System. Goodbye!");
                 scan.close();
             	break;
             }
-        } while (chooseMenu!=7);
+        } while (chooseMenu!=8);
 	}
 	
     public static void main(String[] args) {
