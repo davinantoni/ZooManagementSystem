@@ -4,14 +4,18 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Zebra extends AbstractAnimal implements LargeAnimal, CanBeGroomed {
+import org.softwire.training.zoo.strategies.RoarStrategy;
+import org.softwire.training.zoo.strategies.WalkStrategy;
 
-    private LocalDateTime lastGroomed;
+public class Zebra extends LargeAnimal implements CanBeGroomed {
+	public Zebra(String name, String color, String habitat, LocalDate dateOfBirth, int strengthLevel) {
+		super(name, color, habitat, dateOfBirth, new WalkStrategy(), new RoarStrategy(), strengthLevel);
+		// TODO Auto-generated constructor stub
+	}
 
-    public Zebra(LocalDate dateOfBirth) {
-        super(dateOfBirth);
-    }
+	private LocalDateTime lastGroomed;
 
+	
     @Override
     public void groom() {
         lastGroomed = LocalDateTime.now();

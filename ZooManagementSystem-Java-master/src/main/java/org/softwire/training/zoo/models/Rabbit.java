@@ -4,13 +4,17 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Rabbit extends AbstractAnimal implements SmallAnimal, CanBeGroomed {
+import org.softwire.training.zoo.strategies.HopStrategy;
+import org.softwire.training.zoo.strategies.SquealStrategy;
 
-    private LocalDateTime lastGroomed;
+public class Rabbit extends SmallAnimal implements CanBeGroomed {
+	private LocalDateTime lastGroomed;
+	
+	public Rabbit(String name, String color, String habitat, LocalDate dateOfBirth, int speedLevel) {
+		super(name, color, habitat, dateOfBirth, new HopStrategy(), new SquealStrategy(), speedLevel);
+		// TODO Auto-generated constructor stub
+	}
 
-    public Rabbit(LocalDate dateOfBirth) {
-        super(dateOfBirth);
-    }
 
     @Override
     public void feed() {
