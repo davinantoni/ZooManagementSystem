@@ -18,12 +18,14 @@ import org.softwire.training.zoo.observer.VIPVisitor;
 import org.softwire.training.zoo.observerable.Zoo;
 import org.softwire.training.zoo.services.FeedingScheduler;
 import org.softwire.training.zoo.services.GroomingScheduler;
+import org.softwire.training.zoo.singleton.Singleton;
 import org.softwire.training.zoo.strategies.HopStrategy;
 import org.softwire.training.zoo.strategies.MovementStrategy;
 import org.softwire.training.zoo.strategies.RoarStrategy;
 import org.softwire.training.zoo.strategies.SoundStrategy;
 import org.softwire.training.zoo.strategies.SquealStrategy;
 import org.softwire.training.zoo.strategies.WalkStrategy;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +41,7 @@ public class App {
 	AnimalFactory largeFactory = new LargeAnimalFactory();
 	AnimalFactory smallFactory = new SmallAnimalFactory();
 	ArrayList<AbstractAnimal> animals = new ArrayList<>();
+	Singleton db = Singleton.getInstance();
 	
 	public App() {
 //		List<LargeAnimal> largeAnimals = Arrays.asList(
@@ -88,7 +91,8 @@ public class App {
             System.out.println("4. View All Observer");
             System.out.println("5. Add New Observer");
             System.out.println("6. Notify Observer Promo");
-            System.out.println("7. Exit");
+            System.out.println("7. Scheduling Daily Care");
+            System.out.println("8. Exit");
 
             System.out.print("> ");
             chooseMenu = scan.nextInt();
@@ -96,27 +100,34 @@ public class App {
             
             switch(chooseMenu) {
             case 1:
-            	if(animals.isEmpty()) {
-            		System.out.println("No animals.");
-            	}
-            	else {
-            		for (AbstractAnimal animal1 : animals) {
-            		    System.out.println("Name: " + animal1.getName());
-            		    System.out.println("Color: " + animal1.getColor());
-            		    System.out.println("Habitat: " + animal1.getHabitat());
-            		    System.out.println("Date of Birth: " + animal1.getDateOfBirth());
-            		    System.out.println("Movement Strategy: " + animal1.getMovementStrategy().getClass().getSimpleName());
-            		    System.out.println("Sound Strategy: " + animal1.getSoundStrategy().getClass().getSimpleName());
-            		    if (animal1 instanceof LargeAnimal) {
-            		        LargeAnimal largeAnimal = (LargeAnimal) animal1;
-            		        System.out.println("Strength Level: " + largeAnimal.getStrengthLevel());
-            		    } else if (animal1 instanceof SmallAnimal) {
-            		        SmallAnimal smallAnimal = (SmallAnimal) animal1;
-            		        System.out.println("Speed Level: " + smallAnimal.getSpeedLevel());
-            		    }
-            		    System.out.println("------------------------");
-            		}
-            	}
+//            	if(animals.isEmpty()) {
+//            		System.out.println("No animals.");
+//            	}
+//            	else {
+//            		for (AbstractAnimal animal1 : animals) {
+//            		    System.out.println("Name: " + animal1.getName());
+//            		    System.out.println("Color: " + animal1.getColor());
+//            		    System.out.println("Habitat: " + animal1.getHabitat());
+//            		    System.out.println("Date of Birth: " + animal1.getDateOfBirth());
+//            		    System.out.println("Movement Strategy: " + animal1.getMovementStrategy().getClass().getSimpleName());
+//            		    System.out.println("Sound Strategy: " + animal1.getSoundStrategy().getClass().getSimpleName());
+//            		    if (animal1 instanceof LargeAnimal) {
+//            		        LargeAnimal largeAnimal = (LargeAnimal) animal1;
+//            		        System.out.println("Strength Level: " + largeAnimal.getStrengthLevel());
+//            		    } else if (animal1 instanceof SmallAnimal) {
+//            		        SmallAnimal smallAnimal = (SmallAnimal) animal1;
+//            		        System.out.println("Speed Level: " + smallAnimal.getSpeedLevel());
+//            		    }
+//            		    System.out.println("------------------------");
+//            		}
+//            	}
+            	
+            	if(db.checkDB() == 0) {
+					System.out.println("No Animals.");
+				}
+				else {
+					db.viewAll();
+				}
             	break;
             case 2:
             	System.out.println("=== Add a New Animal ===");
@@ -147,42 +158,39 @@ public class App {
                 if (sound.equals("Roar")) soundStrategy = new RoarStrategy();
                 else if (sound.equals("Squeal")) soundStrategy = new SquealStrategy();
                 
-                AbstractAnimal animal = null;
+//                AbstractAnimal animal = null;
                 if(animalCategory==1) {
                 	System.out.print("Enter Animal's Strength Level: ");
                     level = scan.nextInt();
                     scan.nextLine();
-                    animal = largeFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
-                    		movementStrategy, soundStrategy);
+//                    animal = largeFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
+//                    		movementStrategy, soundStrategy);
+                    db.addAnimal(largeFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
+                    		movementStrategy, soundStrategy));
                 }
                 else {
                 	System.out.print("Enter Animal's Speed Level: ");
                     level = scan.nextInt();
                     scan.nextLine();
-                    animal = smallFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
-                    		movementStrategy, soundStrategy);
-
+//                    animal = smallFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
+//                    		movementStrategy, soundStrategy);
+                    db.addAnimal(smallFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
+                    		movementStrategy, soundStrategy));
                 }
-                animals.add(animal);
+//                animals.add(animal);
                 System.out.println("Animal Added");
                 scan.nextLine();
                 
             	break;
             	
             case 3:
-            	if(animals.isEmpty()) {
+            	if(db.checkDB() == 0) {
             		System.out.println("No animals available. Please add animals first.");
                     break;
             	}
             	
             	System.out.println("=== List of Animals ===");
-                for (int i = 0; i < animals.size(); i++) {
-                	AbstractAnimal animall = animals.get(i);
-                	String movementStrategy2 = animall.getMovementStrategy().getClass().getSimpleName();
-                	String soundStrategy2 = animall.getSoundStrategy().getClass().getSimpleName();
-                    System.out.println((i + 1) + ". " + animall.getName() + ", Movement: " + movementStrategy2 + ", Sound: " +
-                    						soundStrategy2);
-                }
+                db.animalList();
                 
                 int animalIndex = 0;
                 System.out.print("Choose an animal to modify: ");
@@ -197,8 +205,9 @@ public class App {
                 strategyChoice = scan.nextInt();
                 scan.nextLine();
                 
-                AbstractAnimal selectedAnimal = animals.get(animalIndex - 1);
-                
+//                AbstractAnimal selectedAnimal = animals.get(animalIndex - 1);
+                AbstractAnimal selectedAnimal = db.getAnimals().get(animalIndex - 1);
+               
                 if (strategyChoice == 1) {
                     System.out.println("1. Walk");
                     System.out.println("2. Hop");
@@ -234,6 +243,20 @@ public class App {
             	notifyObserver();
             	break;
             case 7:
+//              Keeper<LargeAnimal> largeAnimalKeeper = new Keeper<>(largeAnimals);
+//              Keeper<SmallAnimal> smallAnimalKeeper = new Keeper<>(smallAnimals);
+//      
+//              List<Keeper<? extends Animal>> keepers = Arrays.asList(largeAnimalKeeper, smallAnimalKeeper);
+//              
+//              
+//      
+//              FeedingScheduler feedingScheduler = FeedingScheduler.getInstance();
+//              GroomingScheduler groomingScheduler = GroomingScheduler.getInstance();
+//      
+//              feedingScheduler.assignFeedingJobs(keepers);
+//              groomingScheduler.assignGroomingJobs(keepers);
+            	break;
+            case 8:
             	System.out.println("Exiting the Zoo Management System. Goodbye!");
                 scan.close();
             	break;

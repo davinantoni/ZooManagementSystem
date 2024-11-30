@@ -17,7 +17,7 @@ public class FeedingScheduler {
         }
         return instance;
     }
-
+    
     public void assignFeedingJobs(List<Keeper<? extends Animal>> keepers) {
         keepers.forEach(keeper -> keeper.getResponsibleAnimals().forEach(keeper::feed));
     }
