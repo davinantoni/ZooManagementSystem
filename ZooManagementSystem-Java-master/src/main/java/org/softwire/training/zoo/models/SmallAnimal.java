@@ -13,6 +13,12 @@ public class SmallAnimal extends AbstractAnimal {
 		super(name, color, habitat, dateOfBirth, movementStrategy, soundStrategy);
 		this.speedLevel = speedLevel;
 	}
+	
+	// overload constructor for prototype
+	public SmallAnimal(AbstractAnimal animal, int speedLevel) {
+		super(animal);
+		this.speedLevel = speedLevel;
+	}
 
 	public int getSpeedLevel() {
 		return speedLevel;
@@ -22,6 +28,19 @@ public class SmallAnimal extends AbstractAnimal {
 		this.speedLevel = speedLevel;
 	}
 
-
 //    public abstract void escape();
+	
+	// clone itself for prototype
+	@Override
+	public Animal clone() {
+		// TODO Auto-generated method stub
+		return new SmallAnimal(this, this.speedLevel);
+	}
+
+	@Override
+	public void getInfo() {
+		super.getInfo();
+		System.out.println("Speed Level: " + speedLevel);
+	}
+	
 }

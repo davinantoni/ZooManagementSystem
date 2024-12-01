@@ -11,10 +11,14 @@ public class Lion extends LargeAnimal {
 		super(name, color, habitat, dateOfBirth, new WalkStrategy(), new RoarStrategy(), strengthLevel);
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 //	private double maneLength;
 //    private int prideSize;
+	
 
 
+	
 
     
 }

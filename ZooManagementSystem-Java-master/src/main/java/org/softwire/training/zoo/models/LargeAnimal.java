@@ -14,6 +14,12 @@ public class LargeAnimal extends AbstractAnimal {
 		// TODO Auto-generated constructor stub
 		this.strengthLevel = strengthLevel;
 	}
+	
+	// overload constructor for prototype
+	public LargeAnimal(AbstractAnimal animal, int strengthLevel) {
+		super(animal);
+		this.strengthLevel = strengthLevel;
+	}
 
 	public int getStrengthLevel() {
 		return strengthLevel;
@@ -22,7 +28,19 @@ public class LargeAnimal extends AbstractAnimal {
 	public void setStrengthLevel(int strengthLevel) {
 		this.strengthLevel = strengthLevel;
 	}
-
-
+	
 //    public abstract void showStrength();
+	
+	// return instance of itself for prototype
+	@Override
+	public Animal clone() {
+		return new LargeAnimal(this, this.strengthLevel);
+	}
+
+	@Override
+	public void getInfo() {
+		super.getInfo();
+		System.out.println("Strength Level: " + strengthLevel);
+	}
+	
 }

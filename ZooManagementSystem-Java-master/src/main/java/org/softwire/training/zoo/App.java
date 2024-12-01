@@ -1,5 +1,9 @@
 package org.softwire.training.zoo;
 
+import org.softwire.training.zoo.decorator.AquaticEnclosure;
+import org.softwire.training.zoo.decorator.BasicEnclosure;
+import org.softwire.training.zoo.decorator.Enclosure;
+import org.softwire.training.zoo.decorator.TropicalEnclosure;
 import org.softwire.training.zoo.facade.ZooFacade;
 import org.softwire.training.zoo.factories.AnimalFactory;
 import org.softwire.training.zoo.factories.LargeAnimalFactory;
@@ -26,7 +30,8 @@ import org.softwire.training.zoo.strategies.RoarStrategy;
 import org.softwire.training.zoo.strategies.SoundStrategy;
 import org.softwire.training.zoo.strategies.SquealStrategy;
 import org.softwire.training.zoo.strategies.WalkStrategy;
-
+import org.softwire.training.zoo.templatemethod.LargeAnimalFeedingRoutine;
+import org.softwire.training.zoo.templatemethod.SmallAnimalFeedingRoutine;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,6 +48,7 @@ public class App {
 	AnimalFactory largeFactory = new LargeAnimalFactory();
 	AnimalFactory smallFactory = new SmallAnimalFactory();
 	ArrayList<AbstractAnimal> animals = new ArrayList<>();
+	ArrayList<Enclosure> enclosures = new ArrayList<>();
 	Singleton db = Singleton.getInstance();
 	
 	public App() {
@@ -89,12 +95,16 @@ public class App {
             System.out.println("---------");
             System.out.println("1. View All Animals");
             System.out.println("2. Add a New Animal");
-            System.out.println("3. Change Animal's Movement or Sound");
-            System.out.println("4. View All Observer");
-            System.out.println("5. Add New Observer");
-            System.out.println("6. Notify Observer Promo");
-            System.out.println("7. Scheduling Daily Care");
-            System.out.println("8. Exit");
+            System.out.println("3. Quick Add Animal");
+            System.out.println("4. Change Animal's Movement or Sound");
+            System.out.println("5. Add New Zoo Enclosure");
+            System.out.println("6. View All Zoo Enclosure");
+            System.out.println("7. View All Observer");
+            System.out.println("8. Add New Observer");
+            System.out.println("9. Notify Observer Promo");
+            System.out.println("10. Feed Animals");
+            System.out.println("11. Scheduling Daily Care");
+            System.out.println("12. Exit");
 
             System.out.print("> ");
             chooseMenu = scan.nextInt();
@@ -124,12 +134,7 @@ public class App {
 //            		}
 //            	}
             	
-            	if(db.checkDB() == 0) {
-					System.out.println("No Animals.");
-				}
-				else {
-					db.viewAll();
-				}
+            	viewAnimal();
             	break;
             case 2:
             	System.out.println("=== Add a New Animal ===");
@@ -184,17 +189,133 @@ public class App {
                 scan.nextLine();
                 
             	break;
-            	
             case 3:
-            	if(db.checkDB() == 0) {
-            		System.out.println("No animals available. Please add animals first.");
-                    break;
+            	viewAnimal();
+            	int animalIndex = 0;
+            	AbstractAnimal selectedAnimal = null;
+            	String dobString = "";
+            	if(db.checkDB() != 0) {
+                    System.out.print("Choose an animal to duplicate: ");
+                    animalIndex = scan.nextInt();
+                    scan.nextLine();
+                    
+                    // prototype logic
+                    selectedAnimal = db.getAnimals().get(animalIndex - 1);
+                    LargeAnimal newLargeAnimal = null; 
+                    SmallAnimal newSmallAnimal = null;
+                    if(selectedAnimal instanceof LargeAnimal) {
+                    	newLargeAnimal = (LargeAnimal)selectedAnimal.clone();
+                    	 System.out.println("New animal data");
+                    	newLargeAnimal.getInfo();
+                    }
+                    else {
+                    	newSmallAnimal = (SmallAnimal)selectedAnimal.clone();
+                    	 System.out.println("New animal data");
+                    	newSmallAnimal.getInfo();
+                    }
+                    
+                    System.out.println("Do you wish to modify the new animal? [yes | no](case sensitive): ");
+                    String modify = scan.nextLine();
+                    
+                    if (modify.equals("yes")) {
+                    	int field = 0;
+                    	do {
+                    		System.out.println("Choose field to modify: ");
+                        	System.out.println("1. Name");
+                        	System.out.println("2. Color");
+                        	System.out.println("3. Habitat");
+                        	System.out.println("4. Date of Birth");
+                        	System.out.println("5. Movement Strategy");
+                        	System.out.println("6. Sound Strategy");
+                        	if(newSmallAnimal != null) System.out.println("7. Strength Level");
+                        	else System.out.println("7. Speed Level");
+                        	System.out.println("8. Exit");
+                        	
+                        	field = scan.nextInt(); scan.nextLine();
+                        	switch(field) {
+                        	case 1:
+                        		System.out.print("Enter Animal's New Name: ");
+                                name = scan.nextLine();
+                                if(newLargeAnimal != null) newLargeAnimal.setName(name);
+                            	else newSmallAnimal.setName(name);
+                        		break;
+                        		
+                        	case 2:
+                        		System.out.print("Enter Animal's Color: ");
+                                color = scan.nextLine();
+                                if(newLargeAnimal != null) newLargeAnimal.setColor(color);
+                            	else newSmallAnimal.setColor(color);
+                                break;
+                                
+                        	case 3:
+                        		System.out.print("Enter Animal's Habitat: ");
+                                habitat = scan.nextLine();    
+                                if(newLargeAnimal != null) newLargeAnimal.setHabitat(habitat);
+                            	else newSmallAnimal.setHabitat(habitat);
+                                break;
+                            
+                        	case 4:
+                        		System.out.print("Enter Animal's Date of Birth [YYYY-MM-DD]: ");
+                        		dobString = scan.nextLine();  
+                                LocalDate dob = LocalDate.parse(dobString);
+                                if(newLargeAnimal != null) newLargeAnimal.setDateOfBirth(dob);
+                            	else newSmallAnimal.setDateOfBirth(dob);
+                                break;
+                                
+                        	case 5:
+                        		System.out.print("Enter Animal's Movement [Walk | Hop](case sensitive): ");
+                                move = scan.nextLine();
+                                movementStrategy = null;
+                                if (move.equals("Walk")) movementStrategy = new WalkStrategy();
+                                else if (move.equals("Hop")) movementStrategy = new HopStrategy();
+                                if(newLargeAnimal != null) newLargeAnimal.setMovementStrategy(movementStrategy);
+                            	else newSmallAnimal.setMovementStrategy(movementStrategy);
+                                break;
+                                
+                        	case 6:
+                        		System.out.print("Enter Animal's Sound [Roar | Squeal](case sensitive): ");
+                                sound = scan.nextLine();
+                                soundStrategy = null;
+                                if (sound.equals("Roar")) soundStrategy = new RoarStrategy();
+                                else if (sound.equals("Squeal")) soundStrategy = new SquealStrategy();
+                                if(newLargeAnimal != null) newLargeAnimal.setSoundStrategy(soundStrategy);
+                            	else newSmallAnimal.setSoundStrategy(soundStrategy);
+                                break;
+                                
+                        	case 7: 
+                        		if(newLargeAnimal != null) {
+                        			System.out.print("Enter Animal's Strength Level: ");
+                                    level = scan.nextInt();
+                                    scan.nextLine();
+                                    newLargeAnimal.setStrengthLevel(level);
+                        		}
+                            	else {
+                            		System.out.print("Enter Animal's Speed Level: ");
+                                    level = scan.nextInt();
+                                    scan.nextLine();
+                                    newSmallAnimal.setSpeedLevel(level);
+                            	}
+                        		 break;
+                        	}
+                    	}while(field != 8);
+                    }
+                    
+                    if(newLargeAnimal != null) db.addAnimal(newLargeAnimal);
+                	else db.addAnimal(newSmallAnimal);
+                    
+                    System.out.println("Added new animal successfully using quick add.");
+                	
+            	}
+            	else {
+            		System.out.println("You have to add atleast one animal first to use quick add");
             	}
             	
-            	System.out.println("=== List of Animals ===");
-                db.animalList();
+            	break;
+            	
+            case 4:
+            	viewAnimal();
                 
-                int animalIndex = 0;
+                animalIndex = 0;
                 System.out.print("Choose an animal to modify: ");
                 animalIndex = scan.nextInt();
                 scan.nextLine();
@@ -208,7 +329,7 @@ public class App {
                 scan.nextLine();
                 
 //                AbstractAnimal selectedAnimal = animals.get(animalIndex - 1);
-                AbstractAnimal selectedAnimal = db.getAnimals().get(animalIndex - 1);
+                selectedAnimal = db.getAnimals().get(animalIndex - 1);
                
                 if (strategyChoice == 1) {
                     System.out.println("1. Walk");
@@ -235,16 +356,77 @@ public class App {
                 System.out.println("Strategy updated successfully.");
                 
             	break;
-            case 4:
-            	viewObserver();
-            	break;
             case 5:
-            	addObserver();
+            	String enclosureName = "";
+            	System.out.println("Enter Enclosure's Name: ");
+            	enclosureName = scan.nextLine();
+            	
+            	int facility = 0;
+            	System.out.println("Choose Enclosure's Facilities:");
+            	System.out.println("1. Humidity and temperature control");
+            	System.out.println("2. Water filtration");
+            	System.out.println("3. All");
+            	facility = scan.nextInt(); scan.nextLine();
+            	
+            	Enclosure basicEnclosure = new BasicEnclosure(enclosureName);
+            	Enclosure newEnclosure = null;
+            	switch(facility) {
+            	case 1:
+            		newEnclosure = new TropicalEnclosure(basicEnclosure);
+            		break;
+            	case 2:
+            		newEnclosure = new AquaticEnclosure(basicEnclosure);
+            		break;
+            	case 3:
+            		newEnclosure = new TropicalEnclosure(new AquaticEnclosure(basicEnclosure));
+            		break;
+            	}
+            	
+            	newEnclosure.specification();
+            	enclosures.add(newEnclosure);
+            	System.out.println("Successfully added new enclosure.");
             	break;
             case 6:
-            	notifyObserver();
+            	for(Enclosure e : enclosures) {
+            		e.specification();
+            		 System.out.println("------------------------");
+            	}
             	break;
             case 7:
+            	viewObserver();
+            	break;
+            case 8:
+            	addObserver();
+            	break;
+            case 9:
+            	notifyObserver();
+            	break;
+           
+            case 10:
+            	viewAnimal();
+            	
+            	if(db.checkDB() != 0) {
+            		System.out.print("Choose an animal to feed: ");
+                    animalIndex = scan.nextInt();
+                    scan.nextLine();
+                    
+                    selectedAnimal = db.getAnimals().get(animalIndex - 1);
+                    if(selectedAnimal instanceof LargeAnimal) {
+                    	LargeAnimalFeedingRoutine largeAnimalFeedingRoutine = new LargeAnimalFeedingRoutine();
+                    	largeAnimalFeedingRoutine.executeFeedingRoutine();
+                    }
+                    else {
+                    	SmallAnimalFeedingRoutine smallAnimalFeedingRoutine = new SmallAnimalFeedingRoutine();
+                    	smallAnimalFeedingRoutine.executeFeedingRoutine();
+                    }
+            	}
+            	else {
+            		System.out.println("Can't do feeding routine.");
+            	}
+                
+                
+            	break;
+            case 11:
             	List<AbstractAnimal> allAnimals = db.getAnimals();
 
             	// Memfilter LargeAnimal
@@ -272,16 +454,25 @@ public class App {
                 zooFacade.scheduleDailyCare(keepers);
                 System.out.println("Daily care schedule completed.");
             	break;
-            case 8:
+            case 12:
             	System.out.println("Exiting the Zoo Management System. Goodbye!");
                 scan.close();
             	break;
             }
-        } while (chooseMenu!=8);
+        } while (chooseMenu!=12);
 	}
 	
     public static void main(String[] args) {
         new App();
+    }
+    
+    private void viewAnimal() {
+    	if(db.checkDB() == 0) {
+			System.out.println("No Animals.");
+		}
+		else {
+			db.viewAll();
+		}
     }
     
     private void addObserver() {

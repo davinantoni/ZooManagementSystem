@@ -28,7 +28,21 @@ public abstract class AbstractAnimal implements Animal {
 		this.movementStrategy = movementStrategy;
         this.soundStrategy = soundStrategy;
 	}
-
+    
+    // overload constructor for prototype
+	public AbstractAnimal(AbstractAnimal animal) {
+		this.name = animal.name;
+		this.color = animal.color;
+		this.habitat = animal.habitat;
+		this.dateOfBirth = animal.dateOfBirth;
+		this.lastFed = animal.lastFed;
+		this.movementStrategy = animal.movementStrategy;
+		this.soundStrategy = animal.soundStrategy;
+	}
+	
+	// clone for prototype
+	public abstract Animal clone();
+	
 	public String getName() {
 		return name;
 	}
@@ -109,6 +123,15 @@ public abstract class AbstractAnimal implements Animal {
         // Obviously an animal wouldn't get hungry in a matter of seconds.
         // But it means we can see activity in real time when we run the code...
         return Duration.between(LocalDateTime.now(), lastFed).compareTo(Config.getFeedingFrequency()) > 0;
+    }
+    
+    public void getInfo() {
+    	System.out.println("Name: " + name);
+		System.out.println("Color: " + color);
+		System.out.println("Habitat: " + habitat);
+		System.out.println("Date of Birth: " + dateOfBirth);
+		System.out.println("Movement Strategy: " + movementStrategy.getClass().getSimpleName());
+		System.out.println("Sound Strategy: " + soundStrategy.getClass().getSimpleName());
     }
     
 }
