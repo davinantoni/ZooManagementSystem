@@ -1,5 +1,8 @@
 package org.softwire.training.zoo;
 
+import org.softwire.training.zoo.commands.ChangeStateCommand;
+import org.softwire.training.zoo.commands.Command;
+import org.softwire.training.zoo.commands.CommandInvoker;
 import org.softwire.training.zoo.decorator.AquaticEnclosure;
 import org.softwire.training.zoo.decorator.BasicEnclosure;
 import org.softwire.training.zoo.decorator.Enclosure;
@@ -24,6 +27,7 @@ import org.softwire.training.zoo.observerable.Zoo;
 import org.softwire.training.zoo.services.FeedingScheduler;
 import org.softwire.training.zoo.services.GroomingScheduler;
 import org.softwire.training.zoo.singleton.Singleton;
+import org.softwire.training.zoo.states.HappyState;
 import org.softwire.training.zoo.strategies.HopStrategy;
 import org.softwire.training.zoo.strategies.MovementStrategy;
 import org.softwire.training.zoo.strategies.RoarStrategy;
@@ -454,11 +458,25 @@ public class App {
                 // Jadwalkan perawatan harian
                 System.out.println("Starting daily care schedule...");
                 zooFacade.scheduleDailyCare(keepers);
-                System.out.println("Daily care schedule completed.");
+                
+//                System.out.println("\nVerifying all animal states:");
+//                allAnimals.forEach(animal -> {
+//                    System.out.println(animal.getName() + " is in state: " + ((AbstractAnimal) animal).getState().getClass().getSimpleName());
+//                });
+                
+//                System.out.println("\nChanging all animal states to HappyState using Command...");
+                Command changeStateToHappy = new ChangeStateCommand(allAnimals, new HappyState());
+                CommandInvoker invoker = new CommandInvoker();
+                invoker.executeCommand(changeStateToHappy);
+                
+
+                // Verifikasi perubahan state
                 System.out.println("\nVerifying all animal states:");
                 allAnimals.forEach(animal -> {
                     System.out.println(animal.getName() + " is in state: " + ((AbstractAnimal) animal).getState().getClass().getSimpleName());
                 });
+                
+                System.out.println("\nDaily care schedule completed.");
             	break;
             case 12:         	
             	System.out.println("Checking all animal states");
