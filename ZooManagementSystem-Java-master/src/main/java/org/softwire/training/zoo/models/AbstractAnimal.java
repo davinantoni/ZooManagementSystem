@@ -1,6 +1,8 @@
 package org.softwire.training.zoo.models;
 
 import org.softwire.training.zoo.Config;
+import org.softwire.training.zoo.states.AnimalState;
+import org.softwire.training.zoo.states.HungryState;
 import org.softwire.training.zoo.strategies.MovementStrategy;
 import org.softwire.training.zoo.strategies.SoundStrategy;
 
@@ -17,6 +19,7 @@ public abstract class AbstractAnimal implements Animal {
     private LocalDateTime lastFed;
     private MovementStrategy movementStrategy;
     private SoundStrategy soundStrategy;
+    private AnimalState state;
 
     public AbstractAnimal(String name, String color, String habitat,
 			LocalDate dateOfBirth, MovementStrategy movementStrategy, SoundStrategy soundStrategy) {
@@ -27,6 +30,7 @@ public abstract class AbstractAnimal implements Animal {
 		this.dateOfBirth = dateOfBirth;
 		this.movementStrategy = movementStrategy;
         this.soundStrategy = soundStrategy;
+        this.state = new HungryState(); // Default state
 	}
     
     // overload constructor for prototype
@@ -43,6 +47,14 @@ public abstract class AbstractAnimal implements Animal {
 	// clone for prototype
 	public abstract Animal clone();
 	
+	public void setState(AnimalState state) {
+        this.state = state;
+    }
+
+    public AnimalState getState() {
+        return state;
+    }
+
 	public String getName() {
 		return name;
 	}

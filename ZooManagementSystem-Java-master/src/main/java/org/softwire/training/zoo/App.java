@@ -104,7 +104,8 @@ public class App {
             System.out.println("9. Notify Observer Promo");
             System.out.println("10. Feed Animals");
             System.out.println("11. Scheduling Daily Care");
-            System.out.println("12. Exit");
+            System.out.println("12. Check Animal State");
+            System.out.println("13. Exit");
 
             System.out.print("> ");
             chooseMenu = scan.nextInt();
@@ -414,6 +415,7 @@ public class App {
                     if(selectedAnimal instanceof LargeAnimal) {
                     	LargeAnimalFeedingRoutine largeAnimalFeedingRoutine = new LargeAnimalFeedingRoutine();
                     	largeAnimalFeedingRoutine.executeFeedingRoutine();
+                    	
                     }
                     else {
                     	SmallAnimalFeedingRoutine smallAnimalFeedingRoutine = new SmallAnimalFeedingRoutine();
@@ -453,13 +455,24 @@ public class App {
                 System.out.println("Starting daily care schedule...");
                 zooFacade.scheduleDailyCare(keepers);
                 System.out.println("Daily care schedule completed.");
+                System.out.println("\nVerifying all animal states:");
+                allAnimals.forEach(animal -> {
+                    System.out.println(animal.getName() + " is in state: " + ((AbstractAnimal) animal).getState().getClass().getSimpleName());
+                });
             	break;
-            case 12:
+            case 12:         	
+            	System.out.println("Checking all animal states");
+            	db.getAnimals().forEach(animal -> {
+                    String state = animal.getState() != null ? animal.getState().getClass().getSimpleName() : "Unknown";
+                    System.out.println("Animal: " + animal.getName() + ", State: " + state);
+                });
+            	break;
+            case 13:
             	System.out.println("Exiting the Zoo Management System. Goodbye!");
                 scan.close();
             	break;
             }
-        } while (chooseMenu!=12);
+        } while (chooseMenu!=13);
 	}
 	
     public static void main(String[] args) {
