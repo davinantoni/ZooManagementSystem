@@ -28,7 +28,6 @@ public class SmallAnimal extends AbstractAnimal {
 		this.speedLevel = speedLevel;
 	}
 
-//    public abstract void escape();
 	
 	// clone itself for prototype
 	@Override

@@ -31,9 +31,6 @@ public class ZooFacade {
 	        System.out.println("Scheduling feeding and grooming jobs...");
 	        scheduleFeedingJobs(keepers);
 	        scheduleGroomingJobs(keepers);
-	        
-	     // Set all animals to HappyState after care
-//	        System.out.println("Changing all animal states to HappyState...");
 	        changeAllAnimalStatesToHappy(keepers);
 
 	    }
@@ -44,7 +41,6 @@ public class ZooFacade {
 	                if (animal instanceof AbstractAnimal) {
 	                    AbstractAnimal abstractAnimal = (AbstractAnimal) animal;
 	                    abstractAnimal.setState(new HappyState());
-//	                    System.out.println(abstractAnimal.getName() + " is now Happy!");
 	                }
 	            })
 	        );

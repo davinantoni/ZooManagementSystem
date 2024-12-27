@@ -9,16 +9,6 @@ public class Lion extends LargeAnimal {
 
 	public Lion(String name, String color, String habitat, LocalDate dateOfBirth, int strengthLevel) {
 		super(name, color, habitat, dateOfBirth, new WalkStrategy(), new RoarStrategy(), strengthLevel);
-		// TODO Auto-generated constructor stub
 	}
 	
-	
-//	private double maneLength;
-//    private int prideSize;
-	
-
-
-	
-
-    
 }

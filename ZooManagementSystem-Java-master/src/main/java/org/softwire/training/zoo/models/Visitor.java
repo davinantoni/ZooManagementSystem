@@ -7,7 +7,6 @@ public abstract class Visitor {
 	protected Promo zooPromo;
 	
 	public Visitor(String visitorName) {
-		// TODO Auto-generated constructor stub
 		this.visitorName = visitorName;	
 	}
 	

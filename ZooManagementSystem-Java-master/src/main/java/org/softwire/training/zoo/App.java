@@ -56,42 +56,6 @@ public class App {
 	Singleton db = Singleton.getInstance();
 	
 	public App() {
-//		List<LargeAnimal> largeAnimals = Arrays.asList(
-//                new Lion(LocalDate.of(2010, 4, 28)),
-//                new Lion(LocalDate.of(2012, 5, 11)),
-//                new Zebra(LocalDate.of(2008, 12, 1))
-//        );
-//        List<SmallAnimal> smallAnimals = Collections.singletonList(
-//                new Rabbit(LocalDate.of(2014, 1, 1))
-//        );
-//        List<Animal> animals = new ArrayList<>();
-//        animals.addAll(largeAnimals);
-//        animals.addAll(smallAnimals);
-//
-//        Keeper<LargeAnimal> largeAnimalKeeper = new Keeper<>(largeAnimals);
-//        Keeper<SmallAnimal> smallAnimalKeeper = new Keeper<>(smallAnimals);
-//
-//        List<Keeper<? extends Animal>> keepers = Arrays.asList(largeAnimalKeeper, smallAnimalKeeper);
-//
-//        Rabbit babyRabbit = new Rabbit(LocalDate.now());
-//        smallAnimalKeeper.startLookingAfter(babyRabbit);
-//
-//        FeedingScheduler feedingScheduler = FeedingScheduler.getInstance();
-//        GroomingScheduler groomingScheduler = GroomingScheduler.getInstance();
-//
-//        feedingScheduler.assignFeedingJobs(keepers);
-//        groomingScheduler.assignGroomingJobs(keepers);
-//        animals.forEach(System.out::println);
-		
-//    	LargeAnimal lion = (LargeAnimal) largeFactory.createAnimal("Lion", "Brown", "Land", LocalDate.of(2010, 4, 28),10);
-//    	lion.performMove();
-//    	lion.performSound();
-//    	
-//
-//    	SmallAnimal rabbit = (SmallAnimal) smallFactory.createAnimal("Rabbit", "White", "Land", LocalDate.of(2010, 4, 28), 10);
-//    	rabbit.performMove();
-//    	rabbit.performSound();
-    	
     	int chooseMenu = 0;
 		
 		do {
@@ -117,28 +81,6 @@ public class App {
             
             switch(chooseMenu) {
             case 1:
-//            	if(animals.isEmpty()) {
-//            		System.out.println("No animals.");
-//            	}
-//            	else {
-//            		for (AbstractAnimal animal1 : animals) {
-//            		    System.out.println("Name: " + animal1.getName());
-//            		    System.out.println("Color: " + animal1.getColor());
-//            		    System.out.println("Habitat: " + animal1.getHabitat());
-//            		    System.out.println("Date of Birth: " + animal1.getDateOfBirth());
-//            		    System.out.println("Movement Strategy: " + animal1.getMovementStrategy().getClass().getSimpleName());
-//            		    System.out.println("Sound Strategy: " + animal1.getSoundStrategy().getClass().getSimpleName());
-//            		    if (animal1 instanceof LargeAnimal) {
-//            		        LargeAnimal largeAnimal = (LargeAnimal) animal1;
-//            		        System.out.println("Strength Level: " + largeAnimal.getStrengthLevel());
-//            		    } else if (animal1 instanceof SmallAnimal) {
-//            		        SmallAnimal smallAnimal = (SmallAnimal) animal1;
-//            		        System.out.println("Speed Level: " + smallAnimal.getSpeedLevel());
-//            		    }
-//            		    System.out.println("------------------------");
-//            		}
-//            	}
-            	
             	viewAnimal();
             	break;
             case 2:
@@ -169,14 +111,11 @@ public class App {
                 SoundStrategy soundStrategy = null;
                 if (sound.equals("Roar")) soundStrategy = new RoarStrategy();
                 else if (sound.equals("Squeal")) soundStrategy = new SquealStrategy();
-                
-//                AbstractAnimal animal = null;
+
                 if(animalCategory==1) {
                 	System.out.print("Enter Animal's Strength Level: ");
                     level = scan.nextInt();
                     scan.nextLine();
-//                    animal = largeFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
-//                    		movementStrategy, soundStrategy);
                     db.addAnimal(largeFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
                     		movementStrategy, soundStrategy));
                 }
@@ -184,12 +123,10 @@ public class App {
                 	System.out.print("Enter Animal's Speed Level: ");
                     level = scan.nextInt();
                     scan.nextLine();
-//                    animal = smallFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
-//                    		movementStrategy, soundStrategy);
                     db.addAnimal(smallFactory.createAnimal(name, color, habitat, LocalDate.of(2024, 11, 30), level,
                     		movementStrategy, soundStrategy));
                 }
-//                animals.add(animal);
+
                 System.out.println("Animal Added");
                 scan.nextLine();
                 
@@ -363,7 +300,7 @@ public class App {
             	break;
             case 5:
             	String enclosureName = "";
-            	System.out.println("Enter Enclosure's Name: ");
+            	System.out.print("Enter Enclosure's Name: ");
             	enclosureName = scan.nextLine();
             	
             	int facility = 0;
@@ -459,12 +396,7 @@ public class App {
                 System.out.println("Starting daily care schedule...");
                 zooFacade.scheduleDailyCare(keepers);
                 
-//                System.out.println("\nVerifying all animal states:");
-//                allAnimals.forEach(animal -> {
-//                    System.out.println(animal.getName() + " is in state: " + ((AbstractAnimal) animal).getState().getClass().getSimpleName());
-//                });
-                
-//                System.out.println("\nChanging all animal states to HappyState using Command...");
+
                 Command changeStateToHappy = new ChangeStateCommand(allAnimals, new HappyState());
                 CommandInvoker invoker = new CommandInvoker();
                 invoker.executeCommand(changeStateToHappy);

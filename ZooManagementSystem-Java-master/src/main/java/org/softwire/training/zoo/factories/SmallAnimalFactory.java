@@ -12,13 +12,6 @@ public class SmallAnimalFactory extends AnimalFactory{
 
 	@Override
 	public SmallAnimal createAnimal(String name, String color, String habitat, LocalDate dateOfBirth, int level, MovementStrategy movementStrategy, SoundStrategy soundStrategy) {
-		// TODO Auto-generated method stub
-//		switch(name.toLowerCase()) {
-//		case "rabbit":
-//			return new Rabbit(name, color, habitat, dateOfBirth, level);
-//		default:
-//            throw new IllegalArgumentException("Unknown large animal type: " + name);
-//		}
 		return new SmallAnimal(name, color, habitat, dateOfBirth, movementStrategy, soundStrategy, level); 
 	}
 	

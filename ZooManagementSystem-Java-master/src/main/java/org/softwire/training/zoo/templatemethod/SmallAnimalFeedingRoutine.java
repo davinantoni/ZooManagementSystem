@@ -3,7 +3,7 @@ package org.softwire.training.zoo.templatemethod;
 public class SmallAnimalFeedingRoutine extends FeedingRoutine{
 
 	public SmallAnimalFeedingRoutine() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 

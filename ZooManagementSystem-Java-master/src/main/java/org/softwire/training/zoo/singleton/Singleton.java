@@ -39,7 +39,8 @@ public class Singleton {
 		System.out.println("=== List of Animals ===");
 		for(int i=0 ; i<db.size() ; i++) {
 			AbstractAnimal show = db.get(i);
-			System.out.println("Name: " + show.getName());
+			System.out.print(i+1);
+			System.out.println(". Name: " + show.getName());
  		    System.out.println("Color: " + show.getColor());
  		    System.out.println("Habitat: " + show.getHabitat());
  		    System.out.println("Date of Birth: " + show.getDateOfBirth());

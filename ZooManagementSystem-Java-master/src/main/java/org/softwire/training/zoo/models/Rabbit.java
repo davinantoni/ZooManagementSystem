@@ -12,9 +12,7 @@ public class Rabbit extends SmallAnimal implements CanBeGroomed {
 	
 	public Rabbit(String name, String color, String habitat, LocalDate dateOfBirth, int speedLevel) {
 		super(name, color, habitat, dateOfBirth, new HopStrategy(), new SquealStrategy(), speedLevel);
-		// TODO Auto-generated constructor stub
 	}
-
 
     @Override
     public void feed() {

@@ -29,8 +29,6 @@ public class LargeAnimal extends AbstractAnimal {
 		this.strengthLevel = strengthLevel;
 	}
 	
-//    public abstract void showStrength();
-	
 	// return instance of itself for prototype
 	@Override
 	public Animal clone() {

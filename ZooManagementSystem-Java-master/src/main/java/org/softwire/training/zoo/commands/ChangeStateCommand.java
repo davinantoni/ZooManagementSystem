@@ -18,7 +18,6 @@ public class ChangeStateCommand implements Command {
 	    public void execute() {
 	        animals.forEach(animal -> {
 	            animal.setState(newState);
-//	            System.out.println(animal.getName() + " state changed to: " + newState.getClass().getSimpleName());
 	        });
 	    }
 }

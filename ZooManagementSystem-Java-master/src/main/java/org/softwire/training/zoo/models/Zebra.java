@@ -10,7 +10,6 @@ import org.softwire.training.zoo.strategies.WalkStrategy;
 public class Zebra extends LargeAnimal implements CanBeGroomed {
 	public Zebra(String name, String color, String habitat, LocalDate dateOfBirth, int strengthLevel) {
 		super(name, color, habitat, dateOfBirth, new WalkStrategy(), new RoarStrategy(), strengthLevel);
-		// TODO Auto-generated constructor stub
 	}
 
 	private LocalDateTime lastGroomed;
